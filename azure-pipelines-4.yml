@@ -1,0 +1,26 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+- script: echo "Deploying to MyFirstVM"
+  displayName: Start Deployment
+
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'MyFirstVM-SSH'
+    runOptions: 'commands'
+    commands: |
+      echo "Connected to Azure VM"
+      mkdir -p /home/azureuser/app
+      cd /home/azureuser/app
+      if [ ! -d ".git" ]; then
+        git clone https://github.com/Thanmayakankanala/CucumberDemo.git .
+      else
+        git pull
+      fi
+      echo "Deployment completed"
+    readyTimeout: '20000'
